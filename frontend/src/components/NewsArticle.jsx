@@ -1,11 +1,11 @@
-// import React from "eact";
+// import React from "react";
 import PropTypes from "prop-types";
 
 const NewsArticle = ({ article }) => {
   return (
     <div className="card flex flex-col items-start p-4 text-left rounded-md shadow-lg max-w-md mb-4 font-monst bg-neutral-50">
-      <h2 className="text-lg font-bold my-2 mt-5">{article.title}</h2>
-      <div className="bg-blue-400 h-1 w-10"></div>
+      <div className="bg-blue-400 h-1 w-10 mt-5"></div>
+      <h2 className="text-lg font-bold my-2">{article.title}</h2>
       <p className="text-gray-600 tracking-tight my-2">{article.description}</p>
       <img src={article.image} alt={article.title} />
       <a
