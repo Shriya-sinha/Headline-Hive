@@ -1,0 +1,28 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "news reader app",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shriya-sinha/Headline-Hive.git"
+  },
+  "author": "Shreya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Shriya-sinha/Headline-Hive/issues"
+  },
+  "homepage": "https://github.com/Shriya-sinha/Headline-Hive#readme",
+  "dependencies": {
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.5.0",
+    "nodemon": "^3.1.4"
+  }
+}
