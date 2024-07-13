@@ -1,15 +1,14 @@
-// import React from 'react'
-import Navbar from './Navbar'
-import NewsList from './NewsList'
+import { BrowserRouter } from "react-router-dom";
+import Navbar from "./Navbar";
+import NewsList from "./NewsList";
 
 const Main = () => {
   return (
-    <>
-    <Navbar/>
-    <NewsList/>
-    </>
-  )
-}
+    <BrowserRouter>
+      <Navbar />
+      <NewsList />
+    </BrowserRouter>
+  );
+};
 
-export default Main
-
+export default Main;

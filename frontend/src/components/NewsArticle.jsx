@@ -10,7 +10,7 @@ const NewsArticle = ({ article }) => {
       <img src={article.image} alt={article.title} />
       <a
         href={article.url}
-        className="text-sm text-white rounded-full border border-blue-200 bg-blue-600 hover:bg-blue-700 hover:text-white px-3 py-1 my-2"
+        className="text-sm text-white rounded-full border border-blue-200 bg-blue-500 hover:bg-blue-700 hover:text-white px-3 py-1 my-2"
       >
         Read
       </a>

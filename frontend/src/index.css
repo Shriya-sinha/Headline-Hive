@@ -7,3 +7,6 @@
 a{
   @apply text-neutral-400 hover:text-black
 }
+.active{
+  @apply text-black font-bold
+}
