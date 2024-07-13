@@ -29,8 +29,6 @@ console.log(`Connecting to MongoDB at ${mongoDBURI}`);
 
 mongoose
   .connect(mongoDBURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
   })
   .then(() => {
     console.log("MongoDB connected");
@@ -40,29 +38,49 @@ mongoose
     process.exit(1);
   });
 
-  async function fetchAndStoreNews() {
-    try {
-      const response = await axios.get(API_URL);
-      const data = response.data;
-      const newsArticles = data.articles.map(
-        (article) => new Article(article)
-      );
-      await Article.insertMany(newsArticles);
+cron.schedule("59 23 * * *", () => {
+  console.log("Cron job running...");
+  fetchAndStoreNews()
+    .then(() => {
       console.log("News articles updated successfully");
-    } catch (error) {
+    })
+    .catch((error) => {
       console.error("Failed to update news articles:", error);
-    }
-  }
-
-
-cron.schedule("0 0 * * *", async () => {
-   try {
-     await fetchAndStoreNews();
-     console.log("News articles updated successfully");
-   } catch (error) {
-     console.error("Failed to update news articles:", error);
-   }
+    });
 });
+
+async function fetchAndStoreNews() {
+  try {
+    console.log("Fetching news articles from API...");
+    const response = await axios.get(API_URL);
+    console.log("API response received:", response.status);
+    const data = response.data;
+    const newsArticles = data.articles.map((article) => {
+      return {
+        author: article.source.author,
+        source: { author: article.source.author }, // Create a source object with author
+        title: article.title,
+        description: article.description,
+        url: article.url,
+        urlToImage: article.urlToImage,
+        publishedAt: article.publishedAt,
+        content: article.content,
+      };
+    });
+    const articlesToInsert = newsArticles.map(
+      (article) => new Article(article)
+    );
+    console.log("Inserting news articles into database...");
+    try {
+      await Article.insertMany(articlesToInsert);
+      console.log("News articles inserted successfully");
+    } catch (error) {
+      console.error("Error inserting data:", error);
+    }
+  } catch (error) {
+    console.error("Failed to update news articles:", error);
+  }
+}
 app.get("/api/news", async (req, res) => {
   try {
     const newsArticles = await Article.find();
@@ -70,7 +88,7 @@ app.get("/api/news", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch news articles" });
-  }
+  } 
 });
 
 app.post("/api/news", async (req, res) => {
@@ -86,4 +104,4 @@ app.post("/api/news", async (req, res) => {
 app.use("/api/news", NewsRoute);
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
-});
+}); 
