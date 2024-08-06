@@ -1,6 +1,6 @@
 // import React from "react";
 import { useEffect, useState} from "react";
-import NewsArticle from "./NewsArticle";
+import NewsArticle from "./NewsArticle.jsx";
 import axios from "axios";
 const NewsList = () => {
   const [newsArticles, setNewsArticles] = useState([]);
