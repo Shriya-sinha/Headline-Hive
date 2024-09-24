@@ -2,6 +2,7 @@
 import { useEffect, useState} from "react";
 import NewsArticle from "./NewsArticle.jsx";
 import axios from "axios";
+
 const NewsList = () => {
   const [newsArticles, setNewsArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +33,7 @@ const NewsList = () => {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-x-10 gap-y-5 mx-60 mt-20">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mx-60 mt-20 md:grid-cols-2 sm:grid-cols-1 xs:mx-4 ">
       {newsArticles ? (
         newsArticles.map((article) => (
           <NewsArticle key={article.id} article={article} />

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 const NewsArticle = ({ article }) => {
   return (
-    <div className="card flex flex-col items-start p-4 text-left rounded-md shadow-lg max-w-md mb-4 font-monst bg-neutral-50">
+    <div className="card flex flex-col items-start p-4 text-left rounded-md shadow-lg max-w-md mb-4 font-monst bg-neutral-50 md:max-w-lg lg:max-w-xl">
       <div className="bg-blue-400 h-1 w-10 mt-5"></div>
       <h2 className="text-lg font-bold my-2">{article.title}</h2>
       <p className="text-gray-600 tracking-tight my-2">{article.description}</p>
