@@ -7,14 +7,14 @@ import cors from "cors";
 import Article from "./model/news.model.js";
 import { getNews } from "./controller/News.controller.js";
 import cron from "node-cron";
-
+  
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
 const newsApiKey = "d8f4560c24ec4d1ba8f4300712df3460";
-const API_URL = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${newsApiKey}`;
+const API_URL = `https://newsapi.org/v2/top-headlines?language=en&apiKey=${newsApiKey}`;
 
 dotenv.config();
 
@@ -28,8 +28,7 @@ if (!mongoDBURI) {
 console.log(`Connecting to MongoDB at ${mongoDBURI}`);
 
 mongoose
-  .connect(mongoDBURI, {
-  })
+  .connect(mongoDBURI, {})
   .then(() => {
     console.log("MongoDB connected");
   })
@@ -41,12 +40,23 @@ mongoose
 cron.schedule("59 23 * * *", () => {
   console.log("Cron job running...");
   fetchAndStoreNews()
-    .then(() => {
-      console.log("News articles updated successfully");
-    })
-    .catch((error) => {
-      console.error("Failed to update news articles:", error);
-    });
+    .then(() => fetchLatestNews())
+    .then(() =>
+      console.log(
+        "News articles updated and latest news retrieved successfully"
+      )
+    )
+    .catch((error) => console.error("Failed to update news articles:", error));
+});
+
+cron.schedule("0 0 * * 0", () => {
+  // Run every Sunday at 12:00 AM
+  console.log("Removing old news articles...");
+  removeOldNews()
+    .then(() => console.log("Old news articles removed successfully"))
+    .catch((error) =>
+      console.error("Error removing old news articles:", error)
+    );
 });
 
 async function fetchAndStoreNews() {
@@ -81,6 +91,27 @@ async function fetchAndStoreNews() {
     console.error("Failed to update news articles:", error);
   }
 }
+async function fetchLatestNews() {
+  try {
+    console.log("Retrieving latest news articles from database...");
+    const articles = await Article.find().sort({ publishedAt: -1 }).limit(100);
+    console.log("Latest news articles retrieved:", articles);
+  } catch (error) {
+    console.error("Error retrieving latest news articles:", error);
+  }
+}
+
+async function removeOldNews() {
+  try {
+    console.log("Removing old news articles from database...");
+    const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
+    await Article.deleteMany({ publishedAt: { $lt: threeDaysAgo } });
+    console.log("Old news articles removed successfully");
+  } catch (error) {
+    console.error("Error removing old news articles:", error);
+  }
+}
+
 app.get("/api/news", async (req, res) => {
   try {
     const newsArticles = await Article.find();
@@ -88,7 +119,7 @@ app.get("/api/news", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch news articles" });
-  } 
+  }
 });
 
 app.post("/api/news", async (req, res) => {
@@ -96,12 +127,14 @@ app.post("/api/news", async (req, res) => {
     await fetchAndStoreNews();
     res.json({ message: "News articles updated successfully" });
   } catch (error) {
-    console.error(error);
+    console.error("Error updating news articles:", error);
     res.status(500).json({ error: "Failed to update news articles" });
+    throw error; // Re-throw the error to ensure it's properly handled
   }
 });
 
 app.use("/api/news", NewsRoute);
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
-}); 
+});
+ 
