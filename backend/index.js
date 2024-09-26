@@ -13,9 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(cors({origin:'https://headline-hive.vercel.app'}));
 
-const newsApiKey = "d8f4560c24ec4d1ba8f4300712df3460";
-const API_URL = `https://newsapi.org/v2/top-headlines?language=en&apiKey=${newsApiKey}`;
-
+const API_URL = process.env.API_URL;
 dotenv.config();
 
 const PORT = process.env.PORT || 4000;
