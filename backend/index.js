@@ -7,14 +7,14 @@ import cors from "cors";
 import Article from "./model/news.model.js";
 import { getNews } from "./controller/News.controller.js";
 import cron from "node-cron";
-  
+
+dotenv.config();  
 const app = express();
 
 app.use(express.json());
-app.use(cors({origin:'https://headline-hive.vercel.app'}));
+app.use(cors());
 
 const API_URL = process.env.API_URL;
-dotenv.config();
 
 const PORT = process.env.PORT || 4000;
 const mongoDBURI = process.env.mongoDBURI;
@@ -35,7 +35,7 @@ mongoose
     process.exit(1);
   });
 
-cron.schedule("59 23 * * *", () => {
+cron.schedule("59 * * * *", () => {
   console.log("Cron job running...");
   fetchAndStoreNews()
     .then(() => fetchLatestNews())
@@ -133,6 +133,6 @@ app.post("/api/news", async (req, res) => {
 
 app.use("/api/news", NewsRoute);
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
  
