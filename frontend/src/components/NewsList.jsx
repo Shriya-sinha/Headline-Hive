@@ -3,6 +3,7 @@ import { useEffect, useState} from "react";
 import NewsArticle from "./NewsArticle.jsx";
 import axios from "axios";
 
+const VITE_REACT_APP_BACKEND_BASEURL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
 const NewsList = () => {
   const [newsArticles, setNewsArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,7 +12,7 @@ const NewsList = () => {
   useEffect(() => {
     const fetchNewsArticles = async () => {
       try {
-        const response = await axios.get("http://localhost:4001/api/news");
+        const response = await axios.get(`${VITE_REACT_APP_BACKEND_BASEURL}`);
         const data = response.data;
         setNewsArticles(data);
         setError(null);

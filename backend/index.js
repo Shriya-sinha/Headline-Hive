@@ -35,7 +35,7 @@ mongoose
     process.exit(1);
   });
 
-cron.schedule("59 * * * *", () => {
+cron.schedule("59 23 * * *", () => {
   console.log("Cron job running...");
   fetchAndStoreNews()
     .then(() => fetchLatestNews())
@@ -71,14 +71,16 @@ async function fetchAndStoreNews() {
         description: article.description,
         url: article.url,
         urlToImage: article.urlToImage,
-        publishedAt: article.publishedAt,
+        publishedAt: new Date(article.publishedAt), // Ensure this is a Date object
         content: article.content,
       };
     });
+
     const articlesToInsert = newsArticles.map(
       (article) => new Article(article)
     );
     console.log("Inserting news articles into database...");
+
     try {
       await Article.insertMany(articlesToInsert);
       console.log("News articles inserted successfully");
