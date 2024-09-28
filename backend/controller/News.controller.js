@@ -1,18 +1,18 @@
 // News controller
-import axios  from 'axios';
+import fetch from  'node-fetch';
 import News from '../model/news.model.js';
 const API_URL = process.env.API_URL;
 
 async function fetchAndStoreNews() {
   try {
     console.log("Fetching news articles from API...");
-    const response = await axios.get(API_URL);
+    const response = await fetch(API_URL);
     console.log("API response received:", response.status);
     const data = response.data;
     const newsArticles = data.articles.map((article) => {
       return {
         author: article.source.author,
-        source: { author: article.source.author }, // Create a source object with author
+        source: { author: article.source.author },
         title: article.title,
         description: article.description,
         url: article.url,

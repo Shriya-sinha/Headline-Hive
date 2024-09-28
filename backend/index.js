@@ -5,7 +5,6 @@ import axios from "axios";
 import NewsRoute from "./route/news.route.js";
 import cors from "cors";
 import Article from "./model/news.model.js";
-import { getNews } from "./controller/News.controller.js";
 import cron from "node-cron";
 
 dotenv.config();  
@@ -19,7 +18,7 @@ const API_URL = process.env.API_URL;
 const PORT = process.env.PORT || 4000;
 const mongoDBURI = process.env.mongoDBURI;
 
-if (!mongoDBURI) {
+if (!mongoDBURI) { 
   console.error("Error: mongoDBURI environment variable is not set");
   process.exit(1);
 }
@@ -112,17 +111,7 @@ async function removeOldNews() {
   }
 }
 
-app.get("/api/news", async (req, res) => {
-  try {
-    const newsArticles = await Article.find();
-    res.json(newsArticles);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch news articles" });
-  }
-});
-
-app.post("/api/news", async (req, res) => {
+app.post("/", async (req, res) => {
   try {
     await fetchAndStoreNews();
     res.json({ message: "News articles updated successfully" });
@@ -133,7 +122,7 @@ app.post("/api/news", async (req, res) => {
   }
 });
 
-app.use("/api/news", NewsRoute);
+app.use("/", NewsRoute);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
